@@ -1,39 +1,26 @@
-⚔️ PHP Terminal RPG Battle
+# PHP Terminal RPG Battle
 
-Um jogo de RPG de turno feito em PHP para ser jogado diretamente no terminal. Escolha sua classe, gerencie sua estamina e lute contra oponentes em batalhas épicas.
-🚀 Como rodar o projeto
+Mini RPG de batalhas em terminal desenvolvido em PHP para praticar:
 
-    Requisitos: Certifique-se de ter o PHP 8.0+ instalado em sua máquina.
+- Programação Orientada a Objetos
+- Herança
+- Polimorfismo
+- Classes Abstratas
+- Factory Pattern
 
-    Clone o repositório:
-    Bash
+## Como executar
 
-git clone https://github.com/SEU_USUARIO/NOME_DO_REPO.git
-cd NOME_DO_REPO
+php index.php
 
-Execute o jogo:
-Bash
+## Personagens
 
-    php battle/battle.php
+- Warrior
+- Knight
+- Sorcerer
+- Cleric
+- Hunter
+- Thief
 
-🎮 Funcionalidades
+## Objetivo
 
-    Sistema de Classes: Escolha entre diversas classes (Bandit, Warrior, Sorcerer, etc.), cada uma com atributos únicos.
-
-    Gerenciamento de Estamina: Ataques especiais consomem estamina, que se regenera ao longo dos turnos.
-
-    Sistema de Defesa: Opção estratégica para se defender e reduzir o dano recebido.
-
-    Logs de Batalha: Ao final de cada duelo, um arquivo de log é gerado automaticamente na pasta logs/ com o resumo da luta.
-
-🛠️ Tecnologias Utilizadas
-
-    PHP (Orientação a Objetos)
-
-    Git para controle de versão
-
-    Manipulação de entrada via readline (CLI)
-
-👤 Desenvolvedor
-
-Este projeto foi desenvolvido como um exercício de lógica de programação e arquitetura de software orientada a objetos.
+Projeto criado para praticar conceitos de POO e arquitetura de sistemas em PHP.

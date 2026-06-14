@@ -1,6 +1,5 @@
 <?php
 
-require_once 'routes/routes.php';
 
 class Thief extends Character {
 

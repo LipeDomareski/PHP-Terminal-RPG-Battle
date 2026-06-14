@@ -1,7 +1,5 @@
 <?php
 
-require_once 'routes/routes.php';
-
 class Wanderer extends Character {
 
     public function __construct(

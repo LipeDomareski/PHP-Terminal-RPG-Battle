@@ -1,7 +1,5 @@
 <?php
 
-require_once 'routes/routes.php';
-
 class Sorcerer extends Character {
 
     public function __construct(

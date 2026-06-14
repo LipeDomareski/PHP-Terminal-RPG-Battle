@@ -1,7 +1,5 @@
 <?php
 
-require_once 'routes/routes.php';
-
 class Pyromancer extends Character {
 
     public function __construct(

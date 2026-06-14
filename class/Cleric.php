@@ -1,7 +1,5 @@
 <?php
 
-require_once 'routes/routes.php';
-
 class Cleric extends Character {
 
     public function __construct(
@@ -31,9 +29,9 @@ public function heal(): void {
             $this->stamina -= $custo;
             $cura = (int)($this->faith * 2.5);
             $this->hp += $cura;
-            echo "{$this->name} He invoked a miracle! HP +{$cura}\n";
+            echo "{$this->getName()} He invoked a miracle! HP +{$cura}\n";
         } else {
-            echo "{$this->name} He's out of stamina!\n";
+            echo "{$this->getName()} He's out of stamina!\n";
         }
     }
 }
