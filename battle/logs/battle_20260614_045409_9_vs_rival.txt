@@ -1,0 +1,13 @@
+Turno 1: 9 usou especial. Dano: 60
+Turn 1: rival is defending.
+Turn 2: 9 is defending.
+Turn 2: rival dealt 13 damage.
+Turn 3: 9 is defending.
+Turno 3: rival usou especial. Dano: 27
+Turn 4: 9 is defending.
+Turno 4: rival usou especial. Dano: 27
+Turno 5: 9 usou especial. Dano: 0
+Turn 5: rival dealt 13 damage.
+Turn 6: 9 dealt 42 damage.
+Turn 6: rival dealt 27 damage.
+Turn 7: 9 dealt 80 damage.

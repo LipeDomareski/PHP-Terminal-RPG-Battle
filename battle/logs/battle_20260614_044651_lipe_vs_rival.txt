@@ -1,0 +1,7 @@
+Turno 1: lipe usou especial. Dano: 47
+Turno 1: rival causou 27 de dano.
+Turno 2: lipe causou 47 de dano.
+Turno 2: rival causou 27 de dano.
+Turno 3: lipe usou especial. Dano: 47
+Turno 3: rival usou especial. Dano: 27
+Turno 4: lipe usou especial. Dano: 47
