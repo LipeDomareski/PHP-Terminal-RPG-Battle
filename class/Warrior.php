@@ -29,4 +29,11 @@ public function __construct(
             return 0;
         }
     }
+    public function getSpecialName(): string {
+        return "heavyAttack";
+    }
+        
+    public function useSpecial(): int {
+        return $this->heavyAttack();
+    }
 }

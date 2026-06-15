@@ -25,4 +25,12 @@ public function attack(): int {
         
         return (int)($this->dexterity * 2.5);
     }
+
+    public function getSpecialName(): string {
+        return "trapShot";
+    }
+        
+    public function useSpecial(): int {
+        return $this->trapShot();
+    }
 }

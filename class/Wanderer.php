@@ -13,17 +13,37 @@ class Wanderer extends Character {
     }
 
     public function attack(): int {
-        $dano = ($this->dexterity * 2.2) + ($this->strength * 0.3);
+        $damage = ($this->dexterity * 2.2) + ($this->strength * 0.3);
+        
+        // Critical hit chance
         if (rand(1, 100) <= 20) {
-            echo "Ataque Crítico! ";
-            return (int)($dano * 1.5);
+            echo "Critical Hit! ";
+            return (int)($damage * 1.5);
         }
         
-        return (int)$dano;
+        return (int)$damage;
     }
 
+    // Logic for dodging
     public function dodge(): bool {
-        $chanceEsquiva = $this->dexterity * 2;
-        return (rand(1, 100) <= $chanceEsquiva);
+        $dodgeChance = $this->dexterity * 2;
+        return (rand(1, 100) <= $dodgeChance);
+    }
+
+    public function getSpecialName(): string {
+        return "Dodge";
+    }
+        
+    public function useSpecial(): int {
+        $isSuccessful = $this->dodge();
+        
+        if ($isSuccessful) {
+            echo "{$this->getName()} performed a perfect dodge!\n";
+        } else {
+            echo "{$this->getName()} tried to dodge but failed!\n";
+        }
+
+        // Returns 0 damage because dodging does not attack the opponent
+        return 0;
     }
 }

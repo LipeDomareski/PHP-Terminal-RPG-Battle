@@ -27,4 +27,11 @@ public function attack(): int {
             return 0;
         }
     }
+    public function getSpecialName(): string {
+        return "castSpell";
+    }
+        
+    public function useSpecial(): int {
+        return $this->castSpell();
+    }
 }

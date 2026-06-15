@@ -12,13 +12,22 @@ class Knight extends Character {
         parent::__construct($name, $vitality, $attunement, $endurance, $strength, $dexterity, $resistance, $intelligence, $faith, $hp, $defense, $stamina, false);
     }
 
-public function attack(): int {
-    $damage = (int)(($this->strength * 3.0) + 15); 
-    return $damage + rand(0, 10);
-}
+    public function attack(): int {
+        $damage = (int)(($this->strength * 3.0) + 15); 
+        return $damage + rand(0, 10);
+    }
 
     public function ironFlesh(): void {
-        echo "{$this->getName()} It assumes an impenetrable defensive posture!\n";
-        $this->isBlocking = true; 
-    }
+            echo "{$this->getName()} It assumes an impenetrable defensive posture!\n";
+            $this->isBlocking = true; 
+        }
+
+        public function getSpecialName(): string {
+            return "Iron Flesh";
+        }
+            
+        public function useSpecial(): int {
+            $this->ironFlesh();
+            return 0;
+        }
 }

@@ -13,7 +13,7 @@ abstract class Character {
     protected int $hp; // hp
     protected int $defense; // defesa
     protected int $stamina; // estamina
-    protected bool $isBlocking = false;
+    protected bool $isBlocking = false; //defesa
 
     public function __construct(
         string $name, int $vitality, int $attunement, int $endurance, 
@@ -24,9 +24,9 @@ abstract class Character {
         $this->vitality = $vitality;
         $this->attunement = $attunement;
         $this->endurance = $endurance;
-        $this->strength = $strength; // Corrigido
+        $this->strength = $strength;
         $this->dexterity = $dexterity;
-        $this->resistance = $resistance; // Corrigido
+        $this->resistance = $resistance;
         $this->intelligence = $intelligence;
         $this->faith = $faith;
         $this->hp = $hp;
@@ -58,17 +58,16 @@ public function takeDamage(int $damage): void {
 }
 
 public function recuperarEstamina(): void {
-    $this->stamina += 10; // Recupera um pouco todo turno
-    // Garante que não ultrapasse o máximo (ex: 100)
+    $this->stamina += 10;
     if ($this->stamina > 100) $this->stamina = $this->endurance * 2;
 }
 
 // -- GETTERS --
 
     public function getName(): string{ return $this->name; }
-    public function getVitality(): string{return $this->vitality; } 
+    public function getVitality(): int { return $this->vitality; }
     public function getAttunement(): int{ return $this->attunement; }
-    public function getEndurance(): int{ return $this->endurence; }
+    public function getEndurance(): int{ return $this->endurance; }
     public function getStrength(): int{ return $this->strength; }
     public function getDexterity(): int{return $this->dexterity;}
     public function getResistance(): int{return $this->resistance;}

@@ -3,9 +3,9 @@
 class BattleManager {
 
     private array $stamina = [];
-    private int $maxStamina = 100;
     private array $isDefending = [];
     private array $logs = [];
+    private int $maxStamina = 100;
 
     public function startBattle(): void {
         $p1 = CharacterFactory::create();
@@ -13,109 +13,96 @@ class BattleManager {
 
         $this->stamina[$p1->getName()] = $this->maxStamina;
         $this->stamina[$p2->getName()] = $this->maxStamina;
-
-        echo "\n>> A batalha começou! {$p1->getName()} vs {$p2->getName()}\n";
-        readline('Pressione ENTER para começar...');
-
-        $this->startBattleLoop($p1, $p2);
-    }
-        
-    private function startBattleLoop(Character $p1, Character $p2): void {
-        $turn = 1;
         $this->isDefending = [$p1->getName() => false, $p2->getName() => false];
 
+        echo "\n>> Battle started! {$p1->getName()} vs {$p2->getName()}\n";
+        readline('Press ENTER to start...');
+
+        $this->battleLoop($p1, $p2);
+    }
+
+    private function battleLoop(Character $p1, Character $p2): void {
+        $turn = 1;
+
         while ($p1->getHp() > 0 && $p2->getHp() > 0) {
-            echo "\n--- TURNO $turn ---\n";
-
-            if ($turn % 2 === 0) {
-                foreach ([$p1, $p2] as $char) {
-                    if ($this->stamina[$char->getName()] < $this->maxStamina) {
-                        $this->stamina[$char->getName()]++;
-                        echo "🔥 {$char->getName()} recuperou estamina!\n";
-                    }
-                }
-            }
-
-            // Chamada correta do método fora do loop
-            $this->exibirStatus($p1, $p2, $this->stamina);
+            echo "\n--- TURN $turn ---\n";
+            $this->regenerateStamina($p1, $p2, $turn);
             
-            $this->turno($p1, $p2, $turn);
-            if ($p2->getHp() > 0) $this->turno($p2, $p1, $turn);
+            BattleUI::displayStatus($p1, $p2, $this->stamina, $this->isDefending);
+            
+            $this->executeTurn($p1, $p2, $turn);
+            if ($p2->getHp() > 0) $this->executeTurn($p2, $p1, $turn);
 
             $turn++;
         }
-        $this->salvarLog($p1->getName(), $p2->getName());
+        $this->saveLog($p1->getName(), $p2->getName());
     }
 
-    // O método exibirStatus agora está no lugar correto (fora do loop)
-    private function exibirStatus(Character $p1, Character $p2, array $stamina): void {
-        BattleUI::displayStatus($p1, $p2, $stamina);
-    }
-
-    private function turno(Character $atk, Character $def, int $turn): void {
-        echo "\nTurn of {$atk->getName()} (" . get_class($atk) . ")\n";
-        echo "1-Attack | 2-Special (" . $this->getSpecialName(get_class($atk)) . ") | 3-Defend\n";
+    private function executeTurn(Character $attacker, Character $defender, int $turn): void {
+        echo "\n{$attacker->getName()}'s turn (" . get_class($attacker) . ")\n";
+        echo "1-Attack | 2-Special ({$attacker->getSpecialName()}) | 3-Defend\n";
         
         $action = readline("Choose [1/2/3]: ");
+
+        switch ($action) {
+            case '2':
+                $this->handleSpecial($attacker, $defender, $turn);
+                break;
+            case '3':
+                $this->isDefending[$attacker->getName()] = true;
+                echo "{$attacker->getName()} is in defensive stance!\n";
+                $this->logs[] = "Turn $turn: {$attacker->getName()} defended.";
+                break;
+            default:
+                $this->handleNormalAttack($attacker, $defender, $turn);
+        }
+    }
+
+    private function handleNormalAttack(Character $attacker, Character $defender, int $turn): void {
+        $damage = $attacker->attack();
         
-        if ($action == '2') {
-            $cost = 20;
-            if ($this->stamina[$atk->getName()] >= $cost) {
-                $this->stamina[$atk->getName()] -= $cost;
-                $this->executarEspecial($atk, $def, $turn);
-            } else {
-                echo "Not enough stamina! Performing normal attack.\n";
-                $this->performNormalAttack($atk, $def, $turn);
-            }
-        } elseif ($action == '3') {
-            echo "{$atk->getName()} enters a defensive stance!\n";
-            $this->isDefending[$atk->getName()] = true;
-            $this->logs[] = "Turn $turn: {$atk->getName()} is defending.";
+        if ($this->isDefending[$defender->getName()]) {
+            $damage = (int)($damage * 0.5);
+            echo "Blocked! Damage reduced to $damage.\n";
+            $this->isDefending[$defender->getName()] = false;
+        }
+
+        $defender->takeDamage($damage);
+        echo "Normal Attack! Damage: $damage\n";
+        $this->logs[] = "Turn $turn: {$attacker->getName()} dealt $damage damage.";
+    }
+
+    private function handleSpecial(Character $attacker, Character $defender, int $turn): void {
+        $cost = 20;
+        if ($this->stamina[$attacker->getName()] >= $cost) {
+            $this->stamina[$attacker->getName()] -= $cost;
+            $damage = $attacker->useSpecial(); 
+            $defender->takeDamage($damage);
+            echo "Special Ability used! Damage: $damage\n";
+            $this->logs[] = "Turn $turn: {$attacker->getName()} used special. Damage: $damage";
         } else {
-            $this->performNormalAttack($atk, $def, $turn);
+            echo "Not enough stamina! Defaulting to normal attack.\n";
+            $this->handleNormalAttack($attacker, $defender, $turn);
         }
     }
 
-    private function performNormalAttack(Character $atk, Character $def, int $turn): void {
-        $dano = $atk->attack();
-        
-        if ($this->isDefending[$def->getName()]) {
-            $dano = (int)($dano * 0.5);
-            echo "Blocked! Damage reduced to $dano.\n";
-            $this->isDefending[$def->getName()] = false;
+    private function regenerateStamina(Character $p1, Character $p2, int $turn): void {
+        if ($turn % 2 === 0) {
+            foreach ([$p1, $p2] as $char) {
+                if ($this->stamina[$char->getName()] < $this->maxStamina) {
+                    $this->stamina[$char->getName()]++;
+                    echo "🔥 {$char->getName()} recovered stamina!\n";
+                }
+            }
         }
-
-        $def->takeDamage($dano);
-        echo "Normal Attack! Damage: $dano\n";
-        $this->logs[] = "Turn $turn: {$atk->getName()} dealt $dano damage.";
     }
 
-    private function executarEspecial(Character $atk, Character $def, int $turn): void {
-        $especiais = [
-            'Bandit' => 'wildSwing', 'Warrior' => 'heavyAttack', 
-            'Knight' => 'ironFlesh', 'Sorcerer' => 'castSpell'
-        ];
-        
-        $metodo = $especiais[get_class($atk)] ?? 'attack';
-        $dano = $atk->$metodo();
-        
-        if ($dano > 0) $def->takeDamage($dano);
-        echo "Habilidade Especial usada! Dano: $dano\n";
-        $this->logs[] = "Turno $turn: {$atk->getName()} usou especial. Dano: $dano";
-    }
-
-    private function getSpecialName(string $class): string {
-        $map = ['Bandit'=>'Wild Swing', 'Warrior'=>'Heavy Attack', 'Knight'=>'Iron Flesh', 'Sorcerer'=>'Cast Spell'];
-        return $map[$class] ?? 'Especial';
-    }
-
-    private function salvarLog(string $p1Name, string $p2Name): void {
+    private function saveLog(string $p1Name, string $p2Name): void {
         $dir = __DIR__ . '/../battle/logs';
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
-        }
-        $filename = $dir . '/battle_' . date('Ymd_His') . "_" . $p1Name . "_vs_" . $p2Name . ".txt";
+        if (!is_dir($dir)) mkdir($dir, 0755, true);
+        
+        $filename = $dir . '/battle_' . date('Ymd_His') . ".txt";
         file_put_contents($filename, implode("\n", $this->logs));
-        echo "\n📜 Batalha finalizada. Log salvo em: $filename\n";
+        echo "\n📜 Battle finished. Log saved: $filename\n";
     }
 }

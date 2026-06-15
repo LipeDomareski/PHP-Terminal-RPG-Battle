@@ -27,11 +27,19 @@ public function heal(): void {
         $custo = 30;
         if ($this->stamina >= $custo) {
             $this->stamina -= $custo;
-            $cura = (int)($this->faith * 2.5);
-            $this->hp += $cura;
-            echo "{$this->getName()} He invoked a miracle! HP +{$cura}\n";
+            $heal = (int)($this->faith * 2.5);
+            $this->hp += $heal;
+            echo "{$this->getName()} He invoked a miracle! HP +{$heal}\n";
         } else {
             echo "{$this->getName()} He's out of stamina!\n";
         }
+    }
+public function getSpecialName(): string {
+        return "Heal";
+    }
+        
+    public function useSpecial(): int {
+        $this->heal(); // Executa a cura
+        return 0;      // Retorna 0 de dano para o BattleManager processar
     }
 }

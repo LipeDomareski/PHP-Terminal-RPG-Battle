@@ -23,4 +23,13 @@ public function attack(): int {
             $this->$atributo += 10;
         }
     }
+
+    public function getSpecialName(): string {
+        return "adapt";
+    }
+        
+    public function useSpecial(): int {
+        return $this->adapt();
+        return 0;
+    }
 }

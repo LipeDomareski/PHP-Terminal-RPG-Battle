@@ -25,4 +25,11 @@ public function attack(): int {
         $this->stamina += 15;   
         return (int)$dano;
     }
+        public function getSpecialName(): string {
+        return "backstab";
+    }
+        
+    public function useSpecial(): int {
+        return $this->backstab(); // Chama o original aqui
+    }
 }

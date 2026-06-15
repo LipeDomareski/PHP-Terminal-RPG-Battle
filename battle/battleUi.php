@@ -1,36 +1,38 @@
 <?php
 
 class BattleUI {
-    private static array $invasionLore = [
-        "The fog wall rises...\nA dark phantom crosses into your world.",
-        "You sense a malevolent presence.\nFrom the shadows, your enemy emerges.",
-    ];
+    private const RED = "\033[31m";
+    private const GREEN = "\033[32m";
+    private const BLUE = "\033[34m";
+    private const RESET = "\033[0m";
+    private const YELLOW = "\033[33m";
 
-    public static function displayInvasion(string $name): void {
-        $msg = str_replace('{name}', strtoupper($name), self::$invasionLore[array_rand(self::$invasionLore)]);
-        self::box($msg);
+    public static function displayStatus(Character $p1, Character $p2, array $stamina, array $isDefending): void {
+        echo "\n╔" . str_repeat("═", 58) . "╗\n";
+        self::lineStatus($p1, $stamina[$p1->getName()], $isDefending[$p1->getName()]);
+        echo "║" . str_pad(" ⚔ VS ⚔ ", 58, " ", STR_PAD_BOTH) . "║\n";
+        self::lineStatus($p2, $stamina[$p2->getName()], $isDefending[$p2->getName()]);
+        echo "╚" . str_repeat("═", 58) . "╝\n";
     }
 
-    public static function displayStatus(Character $p1, Character $p2, array $stamina): void {
-        echo "\n┌──────────────────────────────────────────────────────────┐\n";
-        self::lineStatus($p1, $stamina[$p1->getName()]);
-        echo "│                        ⚔  VS  ⚔                        │\n";
-        self::lineStatus($p2, $stamina[$p2->getName()]);
-        echo "└──────────────────────────────────────────────────────────┘\n";
-    }
+    private static function lineStatus(Character $c, int $stm, bool $defending): void {
+        // Barras visuais
+        $hpBar  = self::RED . str_repeat('█', (int)($c->getHp() / 15)) . self::RESET;
+        $stmBar = self::GREEN . str_repeat('░', (int)($stm / 10)) . self::RESET;
+        
+        $defIcon = $defending ? self::BLUE . "🛡️" . self::RESET : "  ";
 
-    private static function lineStatus(Character $c, int $stamina): void {
-        // Bar length of 10 for HP, 20 for Stamina
-        $hpBar  = str_repeat('#', (int)($c->getHp() / 10));
-        $stmBar = str_repeat('|', (int)($stamina / 5)); 
-
-        printf("│ %-10s HP:[%-10s] %3d | STM:[%-20s] %3d │\n", 
-            $c->getName(), $hpBar, $c->getHp(), $stmBar, $stamina);
+        printf("║ %-10s %s HP: %-20s | STM: %-20s ║\n", 
+            $c->getName(), 
+            $defIcon, 
+            $hpBar, 
+            $stmBar
+        );
     }
 
     public static function box(string $msg): void {
-        echo "\n▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓\n";
+        echo "\n" . self::YELLOW . "╭" . str_repeat("─", 50) . "╮\n";
         echo "  $msg\n";
-        echo "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓\n";
+        echo "╰" . str_repeat("─", 50) . "╯" . self::RESET . "\n";
     }
 }

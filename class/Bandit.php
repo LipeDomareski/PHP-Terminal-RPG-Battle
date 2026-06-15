@@ -13,11 +13,13 @@ class Bandit extends Character {
         parent::__construct($name, $vitality, $attunement, $endurance, $strength, $dexterity, $resistance, $intelligence, $faith, $hp, $defense, $stamina, false);
     }
 
-public function attack(): int {
-    $baseDamage = (int)($this->strength * 2.5);
-    $finalDamage = $baseDamage + 15; 
-    return $finalDamage + rand(0, 10);
-}
+    public function attack(): int {
+        $baseDamage = (int)($this->strength * 2.5);
+        $finalDamage = $baseDamage + 15; 
+        return $finalDamage + rand(0, 10);
+    }
+
+
 
     public function wildSwing(): int {
         echo "{$this->getName()} He lets out a wild cry and delivers a brutal blow!\n";
@@ -25,4 +27,13 @@ public function attack(): int {
         $this->stamina -= 10;
         return (int)($this->strength * 3.5);
     }
+    
+    public function getSpecialName(): string {
+        return "Wild Swing";
+    }
+        
+    public function useSpecial(): int {
+        return $this->wildSwing(); // Chama o original aqui
+    }
+            
 }

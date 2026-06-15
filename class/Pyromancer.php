@@ -22,4 +22,13 @@ public function attack(): int {
         
         echo "{$this->getName()} It gets engulfed in flames! Reduced HP, but increased power.\n";
     }
+
+    public function getSpecialName(): string {
+        return "immolation";
+    }
+        
+    public function useSpecial(): int {
+        return $this->immolation();
+        return 0;
+    }
 }
