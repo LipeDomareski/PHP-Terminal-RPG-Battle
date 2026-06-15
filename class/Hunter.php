@@ -19,10 +19,10 @@ public function attack(): int {
     return $isCritical ? (int)($damage * 1.5) : $damage;
 }
 
-    public function trapShot(Character $target): int {
+    public function trapShot(): int {
         echo "{$this->getName()} He fires a precise arrow that traps the enemy!\n";
-        $this->stamina -= 10; 
-        
+        $this->stamina -= 10;
+
         return (int)($this->dexterity * 2.5);
     }
 
